@@ -40,7 +40,7 @@ export const AppCore = {
         const prog = document.getElementById('loader-progress');
 
         let parsedList = [];
-        let ajenosCount = 0; // Contador de XMLs rechazados por RFC incorrecto
+        let ajenosCount = 0; 
         const miRfc = State.empresa.rfc.toUpperCase();
 
         for(let i=0; i<xmlFiles.length; i++) {
@@ -48,14 +48,13 @@ export const AppCore = {
             const cfdi = XMLParser.parse(text, xmlFiles[i].name);
             
             if(cfdi && !cfdi.error) {
-                // VALIDACIÓN ESTRICTA: El XML debe pertenecer al RFC configurado (Como Emisor o Receptor)
                 const rfcE = cfdi.emisor?.rfc?.toUpperCase();
                 const rfcR = cfdi.receptor?.rfc?.toUpperCase();
 
                 if (rfcE === miRfc || rfcR === miRfc) {
                     parsedList.push(cfdi);
                 } else {
-                    ajenosCount++; // XML válido, pero pertenece a otra empresa
+                    ajenosCount++;
                 }
             }
             if(i%5===0) prog.style.width = `${((i/xmlFiles.length)*100)}%`;
@@ -78,20 +77,27 @@ export const AppCore = {
             if(nuevos.length > 0) {
                 await State.saveXML(nuevos);
                 let msg = `Se agregaron ${nuevos.length} CFDI nuevos.`;
-                if (ajenosCount > 0) msg += ` Se ignoraron ${ajenosCount} doc(s) por no coincidir con el RFC ${miRfc}.`;
+                if (ajenosCount > 0) msg += ` Se ignoraron ${ajenosCount} doc(s) ajenos.`;
                 Utils.showToast(msg, "success");
                 Router.navigate('dashboard'); 
             } else { 
                 let msgErr = "Los archivos ya existían o están corruptos.";
-                if (ajenosCount > 0) msgErr = `No se cargó nada. ${ajenosCount} archivo(s) pertenecen a otro RFC distinto a ${miRfc}.`;
+                if (ajenosCount > 0) msgErr = `Rechazado: ${ajenosCount} archivo(s) no coinciden con el RFC ${miRfc}.`;
                 Utils.showToast(msgErr, "warning"); 
             }
         }, 600);
     },
+    
+    // NUEVO: Implementación del Modal de Confirmación Custom en lugar de alert/confirm
     clearSession: async () => {
-        if(confirm("¿Estás seguro de finalizar y purgar todos los datos locales? Esta acción es irreversible.")) {
+        const userConfirmed = await Utils.showConfirm(
+            "Finalizar Área de Trabajo", 
+            "¿Estás seguro de finalizar la sesión y purgar todos los datos locales? Esta acción es irreversible y los XML analizados se eliminarán de este equipo."
+        );
+        
+        if (userConfirmed) {
             await State.clearAll(); 
-            Utils.showToast("Base de datos purgada por seguridad.", "success");
+            Utils.showToast("Base de datos purgada exitosamente.", "success");
             Router.navigate('upload'); 
         }
     }
