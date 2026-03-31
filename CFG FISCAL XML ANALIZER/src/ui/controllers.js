@@ -21,35 +21,25 @@ export const Controllers = {
             const m = x.periodo; if(!mData[m]) mData[m] = { ing:0, egr:0 };
             
             if (x.clase === 'Ingreso' && x.tipo === 'I') { 
-                s.ing += x.total; 
-                s.ivaT16 += x.impuestos.iva16; 
-                s.ivaT8 += x.impuestos.iva8;
-                s.ivaT0 += x.impuestos.base0;
-                s.exentoT += x.impuestos.exento;
-                mData[m].ing += x.total; 
+                s.ing += x.total; s.ivaT16 += x.impuestos.iva16; s.ivaT8 += x.impuestos.iva8;
+                s.ivaT0 += x.impuestos.base0; s.exentoT += x.impuestos.exento; mData[m].ing += x.total; 
             }
             if (x.clase === 'Egreso' && x.tipo === 'I') { 
-                s.egr += x.total; 
-                s.ivaA16 += x.impuestos.iva16;
-                s.ivaA8 += x.impuestos.iva8;
-                mData[m].egr += x.total; 
+                s.egr += x.total; s.ivaA16 += x.impuestos.iva16;
+                s.ivaA8 += x.impuestos.iva8; mData[m].egr += x.total; 
             }
-            
-            s.isr10 += x.impuestos.isr10; 
-            s.isrRes += x.impuestos.isrResico;
+            s.isr10 += x.impuestos.isr10; s.isrRes += x.impuestos.isrResico;
         });
 
         document.getElementById('dash-ing').innerText = Utils.formatCurrency(s.ing); 
         document.getElementById('dash-egr').innerText = Utils.formatCurrency(s.egr);
         document.getElementById('dash-flujo').innerText = Utils.formatCurrency(s.ing - s.egr); 
-        
         document.getElementById('dash-iva-t16').innerText = Utils.formatCurrency(s.ivaT16);
-        document.getElementById('dash-iva-t8').innerText = Utils.formatCurrency(s.ivaT8);
+        document.getElementById('dash-iva-t8').innerText = Utils.formatCurrency(s.ivaT8); 
         document.getElementById('dash-iva-t0').innerText = Utils.formatCurrency(s.ivaT0);
-        document.getElementById('dash-exento-t').innerText = Utils.formatCurrency(s.exentoT);
-        
+        document.getElementById('dash-exento-t').innerText = Utils.formatCurrency(s.exentoT); 
         document.getElementById('dash-iva-a16').innerText = Utils.formatCurrency(s.ivaA16);
-        document.getElementById('dash-iva-a8').innerText = Utils.formatCurrency(s.ivaA8);
+        document.getElementById('dash-iva-a8').innerText = Utils.formatCurrency(s.ivaA8); 
         document.getElementById('dash-isr-10').innerText = Utils.formatCurrency(s.isr10);
         document.getElementById('dash-isr-res').innerText = Utils.formatCurrency(s.isrRes);
 
@@ -81,8 +71,13 @@ export const Controllers = {
                 </td>
             </tr>`;
         });
-        document.getElementById('audit-body').innerHTML = html || `<tr><td colspan="5" class="text-center p-8 text-gray-400">Sin datos</td></tr>`;
-        document.getElementById('audit-ok').innerText = ok; document.getElementById('audit-fail').innerText = fail;
+        
+        const emptyHtml = `<tr><td colspan="5" class="text-center p-12 text-gray-400 font-medium"><i class="fas fa-file-invoice mb-3 block text-3xl opacity-50"></i> Sin datos para auditar</td></tr>`;
+        const spacerHtml = `<tr class="spacer-row"><td colspan="5"></td></tr>`;
+        
+        document.getElementById('audit-body').innerHTML = (html || emptyHtml) + spacerHtml;
+        document.getElementById('audit-ok').innerText = ok; 
+        document.getElementById('audit-fail').innerText = fail;
     },
 
     run_recon: () => {
@@ -146,7 +141,11 @@ export const Controllers = {
                     </td>
                 </tr>`;
             });
-            document.getElementById('recon-body').innerHTML = html || `<tr><td colspan="10" class="text-center p-8 text-gray-400">Sin facturas PPD</td></tr>`;
+            
+            const emptyHtml = `<tr><td colspan="10" class="text-center p-12 text-gray-400 font-medium"><i class="fas fa-link mb-3 block text-3xl opacity-50"></i> Sin facturas PPD para conciliar</td></tr>`;
+            const spacerHtml = `<tr class="spacer-row"><td colspan="10"></td></tr>`;
+
+            document.getElementById('recon-body').innerHTML = (html || emptyHtml) + spacerHtml;
             document.getElementById('r-tot-ppd').innerText = Utils.formatCurrency(tPpd); 
             document.getElementById('r-tot-pag').innerText = Utils.formatCurrency(tPag); 
             document.getElementById('r-tot-nc').innerText = Utils.formatCurrency(tNc); 
@@ -246,7 +245,7 @@ export const Controllers = {
 
         const start = (st.page - 1) * st.limit; const paginated = data.slice(start, start + st.limit);
         
-        document.getElementById(`${pfx}-body`).innerHTML = paginated.map(row => `<tr>` + visibleCols.map(c => {
+        const rowsHtml = paginated.map(row => `<tr>` + visibleCols.map(c => {
                 let val = Utils.resolveNested(row, c.id);
                 if(c.isCurrency) val = Utils.formatCurrency(val);
                 else if(c.id.toLowerCase().includes('fecha')) val = val ? val.split('T')[0] : '';
@@ -256,7 +255,12 @@ export const Controllers = {
                 else if(typeof val === 'string' && val.length > 30 && !c.id.includes('uuid')) val = `<div class="truncate max-w-[200px]" title="${Utils.escapeHTML(val)}">${Utils.escapeHTML(val)}</div>`;
                 else val = Utils.escapeHTML(val);
                 return `<td class="text-${c.align} ${c.isCurrency?'font-medium text-gray-800':''}">${val || '-'}</td>`;
-            }).join('') + `</tr>`).join('') || `<tr><td colspan="${visibleCols.length}" class="text-center p-12 text-gray-500 font-medium text-base"><i class="fas fa-search mb-3 block text-3xl text-gray-300"></i> No hay datos que coincidan con los filtros de búsqueda</td></tr>`;
+            }).join('') + `</tr>`).join('');
+            
+        const emptyHtml = `<tr><td colspan="${visibleCols.length}" class="text-center p-12 text-gray-500 font-medium text-base"><i class="fas fa-search mb-3 block text-3xl text-gray-300"></i> No hay datos que coincidan con los filtros de búsqueda</td></tr>`;
+        const spacerHtml = `<tr class="spacer-row"><td colspan="${visibleCols.length}"></td></tr>`;
+
+        document.getElementById(`${pfx}-body`).innerHTML = (rowsHtml || emptyHtml) + spacerHtml;
 
         document.getElementById(`${pfx}-foot`).innerHTML = `<tr>` + visibleCols.map((c, i) => {
             if(i === 0) return `<td>TOTALES GLOBALES:</td>`;
@@ -300,6 +304,7 @@ export const Controllers = {
     exportExcel: (type) => ExcelService.exportToExcel(Controllers.gridData[type], State.tables[type].columns, type === 'global' ? 'Análisis Global CFDI' : 'Minería de Conceptos', `${type === 'global' ? 'Global' : 'Conceptos'}_${State.empresa.rfc}`, State.empresa),
     
     exportExcelRecon: () => {
+        // ... (resto del código igual)
         const statusF = document.getElementById('recon-filter') ? document.getElementById('recon-filter').value : '';
         const ppds = State.xmlList.filter(x => x.metodoPago === 'PPD' && x.tipo !== 'P');
         const reps = State.xmlList.filter(x => x.tipo === 'P');
