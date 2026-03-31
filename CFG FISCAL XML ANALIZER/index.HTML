@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CDG Suite - Enterprise CFDI 4.0</title>
+    <title>CDG XML Fiscal - Enterprise Suite</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -78,17 +78,20 @@
         <!-- ZONA DE LOGOTIPO DINÁMICO                  -->
         <!-- ========================================== -->
         <div class="p-7 border-b border-corporate-700/50">
-            <div class="flex items-center">
-                <!-- 1. Etiqueta de Imagen (Busca el archivo logo.png) -->
-                <!-- Si falla al cargar, ejecuta el onerror y muestra el texto de respaldo -->
-                <img src="./assets/logo.png" alt="CDG Suite Logo" class="h-10 w-auto object-contain drop-shadow-md" onerror="this.style.display='none'; document.getElementById('logo-fallback').classList.remove('hidden');">
+            <div class="flex items-center gap-3">
+                <!-- 1. Etiqueta de Imagen (Busca el archivo logo.png y actúa como icono) -->
+                <!-- Si falla al cargar, muestra el icono de respaldo -->
+                <img src="./assets/logo.png" alt="Logo" class="h-8 w-auto max-w-[40px] object-contain drop-shadow-md" onerror="this.style.display='none'; document.getElementById('logo-fallback-icon').classList.remove('hidden');">
                 
-                <!-- 2. Respaldo en Texto (Oculto por defecto con 'hidden') -->
-                <h1 id="logo-fallback" class="text-3xl font-black tracking-tighter text-white items-center hidden">
-                    <i class="fas fa-layer-group text-gold-500 mr-3 text-2xl drop-shadow-md"></i> CDG <span class="text-corporate-300 font-light ml-1">Suite</span>
+                <!-- Icono de respaldo (Oculto por defecto con 'hidden') -->
+                <i id="logo-fallback-icon" class="fas fa-layer-group text-gold-500 text-2xl drop-shadow-md hidden"></i>
+                
+                <!-- 2. Texto Permanente -->
+                <h1 class="text-2xl font-black tracking-tighter text-white flex items-center">
+                    CDG <span class="text-corporate-300 font-light ml-1">XML Fiscal</span>
                 </h1>
             </div>
-            <p class="text-[10px] text-corporate-400 mt-2 tracking-[0.2em] uppercase font-semibold">Enterprise Edition</p>
+            <p class="text-[10px] text-corporate-400 mt-3 tracking-[0.2em] uppercase font-semibold">Enterprise Suite</p>
         </div>
         <!-- ========================================== -->
 
