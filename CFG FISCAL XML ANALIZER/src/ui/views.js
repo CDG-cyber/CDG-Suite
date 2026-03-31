@@ -13,11 +13,11 @@ export const Views = {
             <form onsubmit="AppCore.saveConfig(event)" class="space-y-7">
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase mb-2 tracking-wider">RFC Oficial del SAT *</label>
-                    <input type="text" id="cfg-rfc" value="${State.empresa.rfc}" required pattern="^[A-Z&Ñ]{3,4}[0-9]{6}[A-Z0-9]{3}$" placeholder="Ej. XAXX010101000" class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:ring-0 focus:border-corporate-600 outline-none uppercase font-mono text-lg shadow-sm transition-all bg-gray-50 focus:bg-white">
+                    <input type="text" id="cfg-rfc" value="${State.empresa.rfc}" required pattern="^[A-Z&Ñ]{3,4}[0-9]{6}[A-Z0-9]{3}$" placeholder="Ej. XAXX010101000" oninput="this.value = this.value.toUpperCase()" class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:ring-0 focus:border-corporate-600 outline-none uppercase font-mono text-lg shadow-sm transition-all bg-gray-50 focus:bg-white">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-600 uppercase mb-2 tracking-wider">Nombre o Razón Social (Opcional)</label>
-                    <input type="text" id="cfg-nombre" value="${State.empresa.nombre}" placeholder="Ej. CDG FISCAL Y CONTABLE" class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:ring-0 focus:border-corporate-600 outline-none uppercase shadow-sm transition-all bg-gray-50 focus:bg-white">
+                    <input type="text" id="cfg-nombre" value="${State.empresa.nombre}" placeholder="Ej. CDG FISCAL Y CONTABLE" oninput="this.value = this.value.toUpperCase()" class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:ring-0 focus:border-corporate-600 outline-none uppercase shadow-sm transition-all bg-gray-50 focus:bg-white">
                 </div>
                 <button type="submit" class="w-full bg-gradient-to-r from-corporate-800 to-corporate-900 text-white font-black py-4.5 rounded-xl shadow-lg transform hover:-translate-y-1 transition-all duration-300 text-lg flex items-center justify-center h-14"><i class="fas fa-check-circle mr-2 text-gold-500"></i> Guardar Configuración</button>
             </form>
