@@ -36,13 +36,21 @@
         .drag-active { border-color: #d4af37 !important; background-color: #f8fafc !important; }
         
         .datagrid-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: white; border-radius: 0.75rem; border: 1px solid #e2e8f0; position: relative; width: 100%; min-width: 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        .datagrid { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.75rem; }
+        
+        /* CORE FIX: Tabla a 100% de alto y capa Z superior en Footer */
+        .datagrid { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.75rem; height: 100%; }
         .datagrid th { background: #f8fafc; color: #475569; font-weight: 700; padding: 0.85rem 1rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; transition: background 0.2s;}
         .datagrid th:hover { background: #f1f5f9; }
         .datagrid td { padding: 0.7rem 1rem; border-bottom: 1px solid #f1f5f9; white-space: nowrap; color: #334155; }
         .datagrid tbody tr:hover td { background-color: #f8fafc; }
         .datagrid tbody tr:nth-child(even) { background-color: #fafbfc; }
-        .datagrid tfoot td { position: sticky; bottom: 0; background: #0f2032; color: white; font-weight: bold; border-top: 2px solid #334e68; letter-spacing: 0.025em; }
+        
+        /* FILA ESPACIADORA (Truco Enterprise) */
+        .datagrid tbody tr.spacer-row { height: 100%; }
+        .datagrid tbody tr.spacer-row td { padding: 0 !important; border: none !important; background-color: transparent !important; pointer-events: none; }
+        .datagrid tbody tr.spacer-row:hover td { background-color: transparent !important; }
+
+        .datagrid tfoot td { position: sticky; bottom: 0; background: #0f2032; color: white; font-weight: bold; border-top: 2px solid #334e68; letter-spacing: 0.025em; z-index: 20; }
         
         .badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 700; font-size: 0.65rem; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; letter-spacing: 0.025em;}
         .badge-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
@@ -58,7 +66,6 @@
 </head>
 <body class="bg-corporate-50 font-sans text-corporate-800 h-screen flex overflow-hidden">
 
-    <!-- Global Loader -->
     <div id="loader" class="fixed inset-0 bg-white/95 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden transition-opacity">
         <div class="relative">
             <i class="fas fa-circle-notch fa-spin text-7xl text-corporate-600"></i>
@@ -71,7 +78,6 @@
         </div>
     </div>
 
-    <!-- Sidebar Navegación -->
     <aside class="w-72 bg-gradient-to-b from-corporate-900 to-corporate-800 text-white flex flex-col shadow-2xl z-20 flex-shrink-0 transition-all border-r border-corporate-700/50">
         <div class="p-7 border-b border-corporate-700/50">
             <div class="flex items-center gap-3">
@@ -92,7 +98,6 @@
         </div>
     </aside>
 
-    <!-- Contenedor Principal -->
     <main class="flex-1 flex flex-col h-full relative bg-corporate-50 min-w-0">
         <header class="bg-white border-b border-gray-200 px-6 lg:px-8 py-4 lg:py-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-10 shadow-sm flex-shrink-0 w-full">
             <div class="flex-1 min-w-0 w-full">
@@ -112,14 +117,10 @@
         <div class="p-6 md:p-8 flex-1 flex flex-col overflow-y-auto overflow-x-hidden relative min-h-0 min-w-0" id="main-container"></div>
     </main>
 
-    <!-- Toasts Push Notifications -->
     <div id="toast" class="fixed bottom-8 right-8 transform translate-y-24 opacity-0 transition-all duration-300 bg-corporate-900 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center z-[120] text-sm font-medium border border-corporate-700">
         <i class="fas fa-info-circle mr-3 text-gold-500 text-xl" id="toast-icon"></i><span id="toast-msg">Mensaje</span>
     </div>
 
-    <!-- =================================================== -->
-    <!-- NUEVO: Modal de Confirmación Estilo Enterprise      -->
-    <!-- =================================================== -->
     <div id="custom-confirm" class="fixed inset-0 bg-corporate-900/60 backdrop-blur-sm z-[150] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 transform scale-95 transition-transform duration-300" id="custom-confirm-box">
             <div class="flex items-center justify-center w-20 h-20 rounded-full bg-red-50 text-red-500 mx-auto mb-5 border border-red-100">
@@ -134,7 +135,6 @@
         </div>
     </div>
 
-    <!-- PUNTO DE ENTRADA MODULAR -->
     <script type="module" src="./src/main.js"></script>
 </body>
 </html>
